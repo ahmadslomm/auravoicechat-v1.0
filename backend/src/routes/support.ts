@@ -1,30 +1,11 @@
-/**
- * Support Routes - Tickets and Live Chat
- */
-
 import { Router } from 'express';
-import { authenticate } from '../middleware/auth';
-import * as supportController from '../controllers/supportController';
+import { SupportController } from '../controllers/support.ts';
+import { authenticate } from '../middleware/auth.ts';
 
 const router = Router();
 
-// All support routes require authentication
-router.use(authenticate);
-
-// Support tickets
-router.post('/tickets', supportController.createTicket);
-router.get('/tickets/my', supportController.getMyTickets);
-router.get('/tickets/:id', supportController.getTicketDetails);
-router.post('/tickets/:id/reply', supportController.replyToTicket);
-router.put('/tickets/:id/status', supportController.updateTicketStatus);
-
-// Live chat
-router.post('/chat/send', supportController.sendChatMessage);
-router.get('/chat/messages', supportController.getChatMessages);
-router.put('/chat/:id/read', supportController.markMessageRead);
-
-// FAQs
-router.get('/faqs', supportController.getFAQs);
-router.get('/faqs/search', supportController.searchFAQs);
+router.post('/tickets', authenticate, SupportController.createTicket);
+router.get('/tickets', authenticate, SupportController.getTickets);
+router.post('/tickets/:id/reply', authenticate, SupportController.reply);
 
 export default router;
